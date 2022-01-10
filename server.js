@@ -4,11 +4,16 @@ const express = require('express');
 require('dotenv').config();
 const cors = require('cors');
 const weatherData = require('./data/weather.json');
+// const { response } = require('express');
 
 const app = express();
 app.use(cors());
 
 const PORT = process.env.PORT || 3002;
+
+// app.get('/',(request, response) => {
+//   response.send('hello from Pedro client server');
+// });
 
 class Forecast {
   constructor(day, lat, lon) {
@@ -36,16 +41,25 @@ app.get('/weather', (req, res) => {
     res.status(400).send('bad request');
   }
 
+  // try {
   const result = weatherData.find(obj => truncate(obj.lat) === truncate(lat) && truncate(obj.lon) === truncate(lon));
   if (result) {
     const weatherArr = result.data.map(day => new Forecast(day, lat, lon));
     res.status(200).send(weatherArr);
-
+  // } catch(error) {
+  //   handleError(error,res);
+  // }
   } else {
 
-    res.status(204).send('city not found');
+    res.status(404).send('city not found');
+
   }
 });
 
+// function handleError(error, res) {
+//   console.log(error);
+//   res.status(500).send('Unexpected Server Error-Try Again');
+// }
 
-app.listen(PORT, () => console.log(PORT));
+
+app.listen(PORT, () => console.log(`listening on ${PORT}`));
