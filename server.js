@@ -11,9 +11,9 @@ app.use(cors());
 
 const PORT = process.env.PORT || 3002;
 
-// app.get('/',(request, response) => {
-//   response.send('hello from Pedro client server');
-// });
+app.get('/',(request, response) => {
+  response.send('hello from Pedro client server');
+});
 
 class Forecast {
   constructor(day, lat, lon) {
@@ -43,6 +43,7 @@ app.get('/weather', (req, res) => {
 
   // try {
   const result = weatherData.find(obj => truncate(obj.lat) === truncate(lat) && truncate(obj.lon) === truncate(lon));
+  console.log(result);
   if (result) {
     const weatherArr = result.data.map(day => new Forecast(day, lat, lon));
     res.status(200).send(weatherArr);
@@ -51,15 +52,15 @@ app.get('/weather', (req, res) => {
   // }
   } else {
 
-    res.status(404).send('city not found');
+    res.status(204).send('city not found');
 
   }
 });
 
-// function handleError(error, res) {
-//   console.log(error);
-//   res.status(500).send('Unexpected Server Error-Try Again');
-// }
+// // function handleError(error, res) {
+// //   console.log(error);
+// //   res.status(500).send('Unexpected Server Error-Try Again');
+// // }
 
 
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
